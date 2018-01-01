@@ -20,16 +20,27 @@ app.use(express.static(publicPath));
 io.on('connection', (socket) => {
     console.log('New user connected');
 
-    // Emit the custom event - newEmail
-    socket.emit('newMessage', {
+    // Socket.emit - it emits event to single connection.
+    // Emit the custom event - newMessage
+    /* socket.emit('newMessage', {
         from: 'pavanboro@gmail.com',
         text: 'same2u',
         createdAt: 123
-    });
+    }); */
+
+
+    // io.emit - it emits event to every single connection.
 
     // Creating custom event on server side.
     socket.on('createMessage', (message) => {
         console.log('createMessage',message);
+
+        io.emit('newMessage', {
+            from: message.from,
+            text: message.text,
+            createdAt: new Date().getTime()
+        });
+
     });
 
     socket.on('disconnect', () => {
