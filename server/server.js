@@ -28,25 +28,46 @@ io.on('connection', (socket) => {
         createdAt: 123
     }); */
 
+    // Challenge ::
+    // socket.emit from Admin text Welcome to the chat app.
+    // socket.broadcast.emit from Admin text New user joined.
+    socket.emit('newMessage',{
+        from: 'Admin',
+        text: 'Welcome to the chat app'
+    });
 
-    // io.emit - it emits event to every single connection.
+    socket.broadcast.emit('newMessage', {
+        from: 'Admin',
+        text: 'New user has joined',
+        createdAt: new Date().getTime()
+    });
+
+    
 
     // Creating custom event on server side.
     socket.on('createMessage', (message) => {
         console.log('createMessage',message);
 
+        // io.emit - it emits event to every single connection.
         io.emit('newMessage', {
             from: message.from,
             text: message.text,
             createdAt: new Date().getTime()
         });
 
+        /* socket.broadcast.emit('newMessage', {
+            from: message.from,
+            text: message.text,
+            createdAt: new Date().getTime()
+        }); */
     });
+
 
     socket.on('disconnect', () => {
         console.log('Client disconnected');
     });
 });
+
 
 
 // Since we are now using http server, not express server.
